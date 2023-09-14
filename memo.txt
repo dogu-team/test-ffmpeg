@@ -1,0 +1,7 @@
+-f x11grab -framerate 30 -video_size 1920x1080 -i :0.0 -c:v libx264 -preset ultrafast -tune zerolatency -qp 0 output.mp4
+
+-y -f avfoundation -i 3 -r 60 -preset ultrafast -tune zerolatency -vf scale=1920:1080 -c:v libx264 -pix_fmt yuv420p -b:v 2M output.mp4
+
+docker build --platform linux/amd64 -t dogutechio/test-ffmpeg:latest .
+
+docker push dogutechio/test-ffmpeg:latest
