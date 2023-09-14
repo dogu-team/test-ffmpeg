@@ -1,6 +1,7 @@
 const http = require("http");
 const ffmpeg = require("ffmpeg-bin-static");
-console.log(ffmpeg.path);
+console.log("ffmpeg path: ", ffmpeg.path);
+console.log("env: ", process.env);
 
 const { spawn } = require("child_process");
 const express = require("express");
@@ -35,7 +36,7 @@ app.post("/record", (req, res) => {
     console.log(data.toString());
   });
 
-  ffmpegProcess.on("close", (code, signal) => {
+  ffmpegProcess.on("exit", (code, signal) => {
     const message = `FFmpeg process closed with code ${code} and signal ${signal}`;
     console.log(message);
 
@@ -45,6 +46,7 @@ app.post("/record", (req, res) => {
   });
 
   setTimeout(() => {
+    console.log("killing");
     ffmpegProcess.kill("SIGINT");
   }, 5_000);
 });

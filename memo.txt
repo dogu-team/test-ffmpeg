@@ -5,3 +5,9 @@
 docker build --platform linux/amd64 -t dogutechio/test-ffmpeg:latest .
 
 docker push dogutechio/test-ffmpeg:latest
+
+docker run --rm -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -p 3000:3000 dogutechio/test-ffmpeg:latest
+
+docker exec -it 7dcdb82a524b /bin/bash
+
+$env:DISPLAY = "192.168.0.33:0.0"

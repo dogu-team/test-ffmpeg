@@ -1,7 +1,7 @@
-# Use the official Ubuntu 20.04 image as the base image
 FROM ubuntu:20.04
 
-# Install essential packages and utilities
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update && \
     apt-get install -y \
     xorg \
@@ -11,45 +11,30 @@ RUN apt-get update && \
     build-essential && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install nvm (Node Version Manager)
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+SHELL ["/bin/bash", "-c"]
 
-# Load nvm into the shell session
-SHELL ["/bin/bash", "--login", "-c"]
+ENV NODE_VERSION 16.20.1
+ENV NVM_DIR /root/.nvm
 
-# Install Node.js 16 using nvm
-RUN nvm install 16
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 
-# Set the default Node.js version (optional)
-RUN nvm alias default 16
+RUN source ${NVM_DIR}/nvm.sh && \
+    nvm install ${NODE_VERSION} && \
+    nvm alias default ${NODE_VERSION} && \
+    nvm use default
 
-# Verify Node.js and npm installation
-RUN node -v
-RUN npm -v
+ENV NODE_PATH   ${NVM_DIR}/v${NODE_VERSION}/lib/node_modules
+ENV PATH        ${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${PATH}
 
-# Set the working directory for your application (replace with your app directory)
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available) to the container
 COPY package*.json ./
 
-# Install application dependencies
 RUN npm install
 
-# Copy the rest of your application code to the container
 COPY . .
 
-# Expose X11 socket
-ENV DISPLAY=:0
-
-# Set the working directory in the container
-WORKDIR /app
-
-# Expose the port your app is running on (if applicable)
 EXPOSE 3000
 
-# Define the command to start your Node.js application
-# CMD ["node", "app.js"]
-
-# Run a sample X11 application (xeyes)
-CMD [ "xeyes" ]
+CMD ["node", "app.js"]
+# CMD [ "xeyes" ]
