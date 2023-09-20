@@ -12,7 +12,9 @@ RUN apt install -y \
     ffmpeg \
     # ubuntu-desktop \
     # lightdm \ 
-    xvfb
+    xvfb \
+    cpu-checker
+
 RUN apt install -y firefox
 RUN apt install -y unzip
 RUN apt install -y libnss3-dev

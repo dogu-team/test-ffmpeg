@@ -1,7 +1,7 @@
 const http = require("http");
 console.log("env: ", process.env);
 
-const { spawn } = require("child_process");
+const { spawn, execSync } = require("child_process");
 const express = require("express");
 
 const app = express();
@@ -11,7 +11,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/record", (req, res) => {
+  const buf = execSync("kvm-ok").toString('utf-8');
+
+  res.setHeader("KVM_STATUS", buf);
   res.setHeader("Content-disposition", "attachment; filename=output.mp4");
+  res.setHeader("Content-type", "video/mp4");
   res.setHeader("Content-type", "video/mp4");
   res.download("./output.mp4");
   // const data = req.body.toString();
