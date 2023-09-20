@@ -11,9 +11,30 @@ app.get("/", (req, res) => {
 });
 
 app.get("/record", (req, res) => {
-  const buf = execSync("kvm-ok").toString('utf-8');
+  let buf = "none"
+  try{
+    buf = execSync("kvm-ok").toString('utf-8');
+  }catch(e){
+    buf = e.toString('utf-8');
+  }
 
-  res.setHeader("KVM_STATUS", buf);
+  let devKvm = "none";
+  try{
+    devKvm = execSync("cat /dev/kvm").toString('utf-8');
+  }catch(e){
+    devKvm = e.toString('utf-8');
+  }
+
+  let cpuInfo = "none";
+  try{
+    cpuInfo = execSync("cat /proc/cpuinfo").toString('utf-8');
+  }catch(e){
+    cpuInfo = e.toString('utf-8');
+  }
+  console.log('kvm-ok: ', buf);
+  console.log('dev/kvm: ', devKvm);
+  console.log('cpuInfo: ', cpuInfo);
+
   res.setHeader("Content-disposition", "attachment; filename=output.mp4");
   res.setHeader("Content-type", "video/mp4");
   res.setHeader("Content-type", "video/mp4");

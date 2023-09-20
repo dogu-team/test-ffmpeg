@@ -13,7 +13,9 @@ RUN apt install -y \
     # ubuntu-desktop \
     # lightdm \ 
     xvfb \
-    cpu-checker
+    cpu-checker \ 
+    kmod \
+    msr-tools
 
 RUN apt install -y firefox
 RUN apt install -y unzip
